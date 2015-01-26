@@ -60,6 +60,13 @@ class SonataTranslationExtension extends Extension
             );
             $translationTargets['phpcr']['instanceof'] = $config['phpcr']['instanceof'];
         }
+        if ($config['knplabs']['enabled']) {
+            $isEnabled = true;
+            $loader->load('service_knplabs.xml');
+
+            $translationTargets['knplabs']['implements'] = $config['gedmo']['implements'];
+            $translationTargets['knplabs']['instanceof'] = $config['knplabs']['instanceof'];
+        }
 
         if ($isEnabled === true) {
             $loader->load('block.xml');
