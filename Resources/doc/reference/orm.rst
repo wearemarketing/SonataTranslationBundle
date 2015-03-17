@@ -1,17 +1,20 @@
 Translate Doctrine ORM models
 =============================
 
-
-Doctrine ORM models translations are handled by `Gedmo translatable extension <https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/translatable.md>`_.
+Doctrine ORM models translations are handled by `Gedmo translatable extension <https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/translatable.md>`_ or `KnpLabs Doctrine2 Behaviors <https://github.com/KnpLabs/DoctrineBehaviors#translatable>`_.
 
 Gedmo have two ways to handle translations.
 
 Either everything is saved in a unique table, this is easier to set up but can lead to bad performance if your project
 grows or it can have one translation table for every model table. This second way is called personal translation.
 
+Doctrine Behaviours works with a translation table for every model. In your model you have the no translatable strings and in the translatable entity you have the translatable fields.
+
+A. Using Gedmo translatable extension
+-------------------------------------
 
 1. Implement TranslatableInterface
-----------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 First step, your entities have to implement `TranslatableInterface <https://github.com/sonata-project/SonataTranslationBundle/blob/master/Model/Gedmo/TranslatableInterface.php>`_.
 
@@ -124,13 +127,12 @@ Depends on how you want to save translations you can choose between :
 
 
 2. Define translated fields
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Please refer to `Gedmo translatable documentation <https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/translatable.md>`_.
 
-
 3. Define your translation table
---------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Optinal, if you choose personal translation, you have to make a translation class to handle it.
 
@@ -158,4 +160,170 @@ Optinal, if you choose personal translation, you have to make a translation clas
          * @ORM\JoinColumn(name="object_id", referencedColumnName="id", onDelete="CASCADE")
          */
         protected $object;
+    }
+
+B. Using KnpLabs Doctrine Behaviours
+------------------------------------
+
+1. Implement TranslatableInterface
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Like before, your entities have to implement `TranslatableInterface <https://github.com/sonata-project/SonataTranslationBundle/blob/master/Model/Gedmo/TranslatableInterface.php>`_.
+
+And your entities have to implement get and set methods with this format because magic method of Doctrine Behaviour doesnt work (https://github.com/KnpLabs/DoctrineBehaviors#proxy-translations) due to one thing in the internals of Soanta. The explanation and solution for that, you can find it in this `post <http://thewebmason.com/tutorial-using-sonata-admin-with-magic-__call-method/>`_
+
+.. code-block:: php
+
+    namespace WAM\Bundle\DummyBundle\Entity;
+
+    use Doctrine\ORM\Mapping as ORM;
+    use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+    use Sonata\TranslationBundle\Model\Gedmo\TranslatableInterface;
+
+    /**
+     * @ORM\Table(name="wam_dummy_translatable_entity")
+     * @ORM\Entity
+     */
+    class TranslatableEntity implements TranslatableInterface
+    {
+        use ORMBehaviors\Translatable\Translatable;
+
+        /**
+         * @var integer
+         *
+         * @ORM\Column(name="id", type="integer")
+         * @ORM\Id
+         * @ORM\GeneratedValue(strategy="AUTO")
+         */
+        private $id;
+
+        /**
+         * @var string
+         *
+         * @ORM\Column(type="string", length=255)
+         */
+        private $noTranslatableString;
+
+        /**
+         * @return integer
+         */
+        public function getId()
+        {
+            return $this->id;
+        }
+
+        /**
+         * @return string
+         */
+        public function getNoTranslatableString()
+        {
+            return $this->noTranslatableString;
+        }
+
+        /**
+         * @param string $noTranslatableString
+         *
+         * @return TranslatableEntity
+         */
+        public function setNoTranslatableString($noTranslatableString)
+        {
+            $this->noTranslatableString = $noTranslatableString;
+
+            return $this;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getName()
+        {
+            return $this->translate(null, false)->getName();
+        }
+
+        /**
+         * @param string $name
+         */
+        public function setName($name)
+        {
+            $this->translate(null, false)->setName($name);
+
+            return $this;
+        }
+
+        /**
+         * @param string $locale
+         */
+        public function setLocale($locale)
+        {
+            $this->setCurrentLocale($locale);
+
+            return $this;
+        }
+
+        /**
+         * @return string
+         */
+        public function getLocale()
+        {
+            return $this->getCurrentLocale();
+        }
+    }
+
+
+2. Define your translation table
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Please refer to `KnpLabs Doctrine2 Behaviors Documentation <https://github.com/KnpLabs/DoctrineBehaviors#translatable>`_.
+
+Here is an example:
+
+.. code-block:: php
+
+    namespace WAM\Bundle\DummyBundle\Entity;
+
+    use Doctrine\ORM\Mapping as ORM;
+    use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
+    /**
+     * @ORM\Table(name="wam_dummy_translatable_entity_translation")
+     * @ORM\Entity
+     */
+    class TranslatableEntityTranslation
+    {
+        use ORMBehaviors\Translatable\Translation;
+
+        /**
+         * @var string
+         *
+         * @ORM\Column(type="string", length=255)
+         */
+        private $name;
+
+        /**
+         * @return integer
+         */
+        public function getId()
+        {
+            return $this->id;
+        }
+
+        /**
+         * @return string
+         */
+        public function getName()
+        {
+            return $this->name;
+        }
+
+        /**
+         * @param string $name
+         *
+         * @return TranslatableEntityTranslation
+         */
+        public function setName($name)
+        {
+            $this->name = $name;
+
+            return $this;
+        }
     }

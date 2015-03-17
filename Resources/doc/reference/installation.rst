@@ -42,6 +42,8 @@ Installation
             enabled: true
         phpcr:
             enabled: true
+        knplabs:
+            enabled: true
 
 * **locales**: is the list of your frontend locales ie the locales in which your models will be translated.
 * **default_locale**: is simply the locale loaded by default in your forms
