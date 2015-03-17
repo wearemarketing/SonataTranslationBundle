@@ -33,7 +33,7 @@ class SonataTranslationExtension extends Extension
         $container->setParameter('sonata_translation.default_locale', $config['default_locale']);
 
         $isEnabled = false;
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('service.xml');
 
         $translationTargets = array();
@@ -54,7 +54,7 @@ class SonataTranslationExtension extends Extension
             $translationTargets['phpcr']['implements'] = array_merge(
                 array(
                     'Sonata\TranslationBundle\Model\Phpcr\TranslatableInterface',
-                    'Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface'
+                    'Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface',
                 ),
                 $config['phpcr']['implements']
             );
@@ -64,7 +64,7 @@ class SonataTranslationExtension extends Extension
             $isEnabled = true;
             $loader->load('service_knplabs.xml');
 
-            $translationTargets['knplabs']['implements'] = $config['gedmo']['implements'];
+            $translationTargets['knplabs']['implements'] = $config['knplabs']['implements'];
             $translationTargets['knplabs']['instanceof'] = $config['knplabs']['instanceof'];
         }
 
