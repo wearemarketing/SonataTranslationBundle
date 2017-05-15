@@ -1,16 +1,18 @@
 <?php
+
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Sonata\TranslationBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -19,7 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class AdminExtensionCompilerPass implements CompilerPassInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
@@ -29,7 +31,7 @@ class AdminExtensionCompilerPass implements CompilerPassInterface
         foreach ($container->findTaggedServiceIds('sonata.admin') as $id => $attributes) {
             $admin = $container->getDefinition($id);
             $modelClass = $container->getParameterBag()->resolveValue($admin->getArgument(1));
-            if(!class_exists($modelClass)){
+            if (!class_exists($modelClass)) {
                 continue;
             }
             $modelClassReflection = new \ReflectionClass($modelClass);
@@ -52,13 +54,13 @@ class AdminExtensionCompilerPass implements CompilerPassInterface
     /**
      * @param array $types
      *
-     * @return array
+     * @return Reference[]
      */
     protected function getAdminExtensionReferenceByTypes(array $types)
     {
         $references = array();
         foreach ($types as $type) {
-            $references[$type] = new Reference('sonata_translation.admin.extension.' . $type . '_translatable');
+            $references[$type] = new Reference('sonata_translation.admin.extension.'.$type.'_translatable');
         }
 
         return $references;

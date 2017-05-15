@@ -1,38 +1,44 @@
 <?php
+
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Sonata\TranslationBundle\Model\Gedmo;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * This is your base class if you want to use gedmo personal translation
- * ie: if you want to have a dedicated translation table by model table
+ * ie: if you want to have a dedicated translation table by model table.
  *
  * @author Nicolas Bastien <nbastien.pro@gmail.com>
+ *
  * @see https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/translatable.md : Personal translations
  */
 abstract class AbstractPersonalTranslatable extends AbstractTranslatable
 {
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|AbstractPersonalTranslation[]
      */
     protected $translations;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->translations = new ArrayCollection();
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|AbstractPersonalTranslation[]
      */
     public function getTranslations()
     {
@@ -40,8 +46,8 @@ abstract class AbstractPersonalTranslatable extends AbstractTranslatable
     }
 
     /**
-     * @param $field
-     * @param $locale
+     * @param string $field
+     * @param string $locale
      *
      * @return null|string
      */
@@ -53,7 +59,7 @@ abstract class AbstractPersonalTranslatable extends AbstractTranslatable
             }
         }
 
-        return null;
+        return;
     }
 
     /**

@@ -1,12 +1,14 @@
 <?php
+
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Sonata\TranslationBundle\Checker;
 
 /**
@@ -57,9 +59,10 @@ class TranslatableChecker
     }
 
     /**
-     * Check if $object is translatable
+     * Check if $object is translatable.
      *
-     * @param  mixed $object
+     * @param mixed $object
+     *
      * @return bool
      */
     public function isTranslatable($object)
@@ -69,7 +72,16 @@ class TranslatableChecker
         }
 
         if (function_exists('class_uses')) {
-            if (in_array('Sonata\TranslationBundle\Traits\Translatable', class_uses($object))) {
+            // NEXT_MAJOR: remove Translateable and PersonalTrait
+            $translateTraits = array(
+                'Sonata\TranslationBundle\Traits\Translatable',
+                'Sonata\TranslationBundle\Traits\TranslatableTrait',
+                'Sonata\TranslationBundle\Traits\Gedmo\PersonalTranslatable',
+                'Sonata\TranslationBundle\Traits\Gedmo\PersonalTranslatableTrait',
+            );
+
+            $traits = class_uses($object);
+            if (count(array_intersect($translateTraits, $traits)) > 0) {
                 return true;
             }
         }
@@ -89,4 +101,4 @@ class TranslatableChecker
 
         return false;
     }
-} 
+}

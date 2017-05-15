@@ -1,14 +1,26 @@
-CHANGELOG
-=========
+# Change Log
+All notable changes to this project will be documented in this file.
+This project adheres to [Semantic Versioning](http://semver.org/).
 
-1.0.1
------
+## [2.1.0](https://github.com/sonata-project/SonataTranslationBundle/compare/2.0.2...2.1.0) - 2017-01-17
+### Added
+- Added missing flag image `ja.png`
 
+### Changed
+- Use `AbstractAdminExtension` instead of deprecated `AdminExtension`
 
+### Deprecated
+- Deprecate `Translatable` in favor of `TranslatableTrait`
+- Deprecate `PersonalTranslatable` in favor of `PersonalTranslatableTrait`
 
-1.0.0
------
+### Fixed
+- Fix missing locale annotation for Gedmo trait
+- Display flags for locales with country code
 
-* **2015-03-16**: Change versioning to make first stable release, we are now following [Semantic Versioning guidelines](http://semver.org)
+## [2.0.2](https://github.com/sonata-project/SonataTranslationBundle/compare/2.0.1...2.0.2) - 2016-06-15
+### Fixed
+- Remove wrong `doctrine-orm-admin-bundle` and `doctrine-phpcr-admin-bundle` composer requirements
 
-(**deprecated_2_3_old_versionning** branch has been created to give the time to switch to 1.0.*)
+## [2.0.1](https://github.com/sonata-project/SonataTranslationBundle/compare/2.0.0...2.0.1) - 2016-06-07
+### Fixed
+- Fix wrong conflict rule for `doctrine-orm-admin-bundle`
